@@ -487,7 +487,7 @@ We can also pass index along with value
 	> _(array).join(':')
 	'1:2:3'
 ```
-* It creates a cached version of function, it keeps returning the same result of function
+* It is a new way
 
 ### 2. Unwrapping values
 ```js
