@@ -268,18 +268,7 @@ We can also pass index along with value
 ```
 * Create a custom function and have it available to be used in lodash
 
-### 7. Mixin
-```js
-	> var isEven = (number) => number%2 === 0
-	> isEven(4)
-	true 
-	> _.mixin({isEven: isEven})
-	> _.isEven(6)
-	true
-```
-* Create a custim function and have it available to be used in lodash
-
-### 8. BindAll
+### 7. BindAll
 ```js
 	> var Sheep = function(name){
 			this.name = name;
