@@ -198,6 +198,359 @@ We can also pass index along with value
 
 ## Util & Date Functions
 
+### 1. Constant
+```js
+	> var f = _.constant(2)
+	> f()
+	2
+```
+* It creates a function that returns a constant value
+
+### 2. Stub Functions (StubArray, StubFalse, StubTrue, StubObject, StubString)
+```js
+	> _.stubString()
+	''
+	> _.stubFalse()
+	false
+	> _.stubTrue()
+	true
+	> _.stubObject()
+	{}
+	> _.stubArray()
+	[]
+```
+* It creates a function that returns a constant value
+
+### 3. Times
+```js
+	> var i = 10
+	> _.times(5, j=>j+=i)
+	[10,11,12,13,14]
+```
+* It will call a given function a specific no. of times
+
+### 4. Cond
+```js
+	> var f = _.cond([
+			[_.matches({a:1}), _.constant('a')],
+			[_.matches({b:2}), _.constant('b')],
+			[_.stubTrue, _.constant('nomatch')]
+		]);
+	> f({a:1})
+	'a'
+	> f({b:2})
+	'b'
+	> f({a:2})
+	'nomatch'
+```
+* It works like if else statements
+
+### 5. Flow
+```js
+	> const sq = (n) => n*n;
+	> const div = (n) => n/2;
+	> var func = _.flow([sq, div])
+	> func(10, 20)
+	50
+```
+* It calls functions sequentially
+
+##### For _<ins>FlowRight</ins>_ it calls the functions from right side
+
+### 6. Mixin
+```js
+	> var isEven = (number) => number%2 === 0
+	> isEven(4)
+	true 
+	> _.mixin({isEven: isEven})
+	> _.isEven(6)
+	true
+```
+* Create a custom function and have it available to be used in lodash
+
+### 7. Mixin
+```js
+	> var isEven = (number) => number%2 === 0
+	> isEven(4)
+	true 
+	> _.mixin({isEven: isEven})
+	> _.isEven(6)
+	true
+```
+* Create a custim function and have it available to be used in lodash
+
+### 8. BindAll
+```js
+	> var Sheep = function(name){
+			this.name = name;
+			this.giveWool = function(){console.log(this.name + ' gives wool')}
+		}
+	> Sheep.prototype.baa = function(){console.log(this.name + ' says baa!')}
+	> var sheep1 = new sheep('simon')
+	> var sheep2 = new Sheep('sally')
+	> sheep1.baa()
+	simon says baa!
+	> sheep2.giveWool()
+	sally gives wool
+	> var func = sheep1.baa
+	> var func2 = sheep1.giveWool
+	> func()
+	undefined says baa!
+	> func2()
+	undefined gives wool
+	> _.bindAll(sheep1, 'baa')
+	> _.bindAll(sheep1, 'giveWool')
+	> var func = sheep1.baa
+	> var func2 = sheep1.giveWool
+	> func()
+	simon says baa!
+	> func2()
+	simon gives wool
+	> sheep1 = undefined
+	> func()
+	simon says baa!
+	> func2()
+	simon gives wool
+	> var func3 _.bind(sheep2.baa, sheep2)
+	> func3()
+	sally says baa!
+	// not much difference between bind and bindAll
+	> sheep2 = undefined
+	> func3()
+	sally says baa!
+```
+* This function makes it possible to replace a function on an object with an another function which shares the same name and implementation but it is also bound to that object
+
+## Manipulating Objects
+
+### 1. Create
+```js
+	> function Vehicle(){
+			this.Wheels = 4;
+			this.Speed = 0;
+		}
+	> function Car(){
+			Vehicle.call(this);
+		}
+	> var a = new Car
+	> a instanceof Car
+	true 
+	> a instanceof Vehicle
+	false 
+	> a
+	Car {Wheels: 4, Speed: 0}
+	> Car.prototype = _.create(Vehicle.prototype, {'constructor': Vehicle})
+	> var a = new Car
+	> b instanceof Vehicle
+	true 
+	> b
+	Vehicle {Wheels: 4, Speed: 0}
+```
+* Create same prorotypes bia inheritance
+
+## Manipulating Functions
+
+### 1. Before
+```js
+	> var f1 = _.before(5, ()=>_.random(20))
+	> f1()
+	11
+	> f1()
+	20
+	> f1()
+	18
+	> f1()
+	19
+	> f1()
+	19
+	> f1()
+	19
+	> f1()
+	19
+	> f1()
+	19
+	> f1()
+	19
+	
+```
+* Invoke a function upto but not including the specified no. of times, after that it will just repeat the value of that specified function
+
+### 2. After
+```js
+	> var f1 = _.after(5, ()=>_.random(20))
+	> f1()
+	undefined
+	> f1()
+	undefined
+	> f1()
+	undefined
+	> f1()
+	undefined
+	> f1()
+	undefined
+	> f1()
+	11
+	> f1()
+	19
+	> f1()
+	18
+	> f1()
+	20
+	> f1()
+	18
+	
+```
+* it waits a specified no. of times before executing the given function.
+
+### 3. Defer
+```js
+	> _.defer(()=>{})
+```
+* Wait for the javascript core stack to be clear before the function is invoked
+
+### 4. Memoize
+```js
+	> var object = {a:10,b:20}
+	> _.values(object)
+	[10,20]
+	> var mem = _.memoize(_.values)
+	> mem(object)
+	[10,20]
+	> object.a = 15
+	> _.values(object)
+	[15,20]
+	> mem(object)
+	[10,20]
+```
+* It creates a cached version of function, it keeps returning the same result of function
+
+### 5. Throttle
+```js
+	> var action = () => console.log('my action');
+	> var f = _throttle(action, 10000);
+	> setTimeout(f, 1000)
+	'my action'
+	// if you try again instantly, it wont output anything, it will only output after 10 seconds
+```
+* It invokes a function atmost once every miliseconds.
+
+### 6. Debounce
+```js
+	// same as throttle
+```
+* It invokes a function atmost once every miliseconds so similar to throttle, it differs in if a function is invoked again while waiting period, the waiting period will be resetted
+
+### 7. Unary
+```js
+	> var f = function(a,b){
+			console.log(a,b);
+			if(a && b){
+				return a + b;
+			}
+			else return a;
+		}
+	> f(10, 20)
+	10 20
+	30
+	> var f2 = _.unary(f)
+	> f2(10, 20)
+	10
+	10
+```
+* Takes only one prameter ignores the rest
+
+##### For _<ins>ary</ins>_ you can supply an additinal argument to control inclusion
+
+### 8. Curry
+```js
+	> var character = (name, type, stamina, attack) => console.log(name, type, stamina, attack)
+	> character('darnak', 'wizard', 6, 8)
+	darnak wizard 6 8
+	> var charactercurry = name=>type=>stamina=>attack=>console.log(name, type, stamina, attack)
+	> charactercurry('darnak')
+	[Function]
+	> var f1=charactercurry('darnak')
+	> var f2 = f1('wizard')
+	> var f3 = f2(6)
+	> var f4 = f3(8)
+	darnak wizard 6 8
+	// as the syntax is complicated we can use curry function
+	> var curried = _.curry(character)
+	> curried('darnak')('wizard')(6) (8)
+	darnak wizard 6 8
+	> curried(('darnak')('wizard')6 8 )
+	darnak wizard 6 8
+	> curried('darnak', 'wizard', 6, 8)
+	darnak wizard 6 8
+```
+* It will create a new function that will accept arguments of the given function. And then it will either execute that function and return the result, or it returns another function and accepts more arguments. And this will keep repeating till there are no more arguments.
+
+##### For _<ins>curryRight</ins>_ arguments are applied from right side
+
+## Sequencing and Chaining
+
+### 1. `_(Value)` Wrapped
+```js
+	> var array = [1,2,3]
+	> _.join(array, ':')
+	'1:2:3'
+	// or we can do is reverse
+	> _(array).join(':')
+	'1:2:3'
+```
+* It creates a cached version of function, it keeps returning the same result of function
+
+### 2. Unwrapping values
+```js
+	> _([1,2,3]).concat([4,5,6])
+	LodashWrapper {
+	  __wrapped__: [ 1, 2, 3 ],
+	  __actions__: [ { func: [Function: concat], args: [Object], thisArg: [Function] } ],
+	  __chain__: false,
+	  __index__: 0,
+	  __values__: undefined
+	}
+	// wrapper
+
+	> _([1,2,3]).join(':')
+	'1:2:3'
+	// no wrapper
+
+	> _([1,2,3]).concat([4,5,6]).value()
+	[1,2,3,4,5,6]
+	> _([1,2,3]).concat([4,5,6]).valueOf()
+	[1,2,3,4,5,6]
+	> _([1,2,3]).concat([4,5,6]).toJSON()
+	[1,2,3,4,5,6]
+```
+* Sometimes we get wrapper things as an output rather than result, to get the value use value of, due to wrapper we can chain functions
+* Methods that return a single value or may return a primitive value will automatically end the chain sequence and return the unwrapped value
+
+### 3. Chaining
+```js
+	> _([1,2,3,4,5]).reverse().first()
+	5
+	> _([1,2,3,4,5]).tap(function(array){array.pop()}).reverse().first()
+	4
+```
+* It intercepts whats coming
+
+
+# _<ins>THANK YOU!</ins>_
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
